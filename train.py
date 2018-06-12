@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+import random
 
 import chainer
 from chainer import optimizers
@@ -9,7 +10,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import mdn
-
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -19,11 +19,19 @@ if __name__ == '__main__':
     parser.add_argument('--hidden-units', '-u', type=int, default=24)
     parser.add_argument('--gaussian-mixtures', '-m', type=int, default=24)
     parser.add_argument('--epoch', '-e', type=int, default=10000)
+    parser.add_argument('--seed', '-s', type=int, default=0)
     args = parser.parse_args()
 
-    y_data = np.float32(np.random.uniform(-10.5, 10.5, (args.n_samples, args.input_dim)))
+    random.seed(args.seed)
+    np.random.seed(args.seed)
+    if args.gpu >= 0:
+        chainer.backends.cuda.cupy.random.seed(args.seed)
+
+    y_data = np.float32(np.random.uniform(-10.5, 10.5,
+                                          (args.n_samples, args.input_dim)))
     noise = np.random.normal(size=(args.n_samples, args.input_dim))
-    x_data = np.float32(np.sin(0.75 * y_data) * 7.0 + y_data * 0.5 + noise * 1.0)
+    x_data = np.float32(np.sin(0.75 * y_data) * 7.0 +
+                        y_data * 0.5 + noise * 1.0)
 
     # Plot the target data
     plt.scatter(x_data, y_data, c='r', alpha=0.3)
@@ -51,7 +59,8 @@ if __name__ == '__main__':
         optimizer.update()
         loss_history.append(float(loss.array))
         if epoch % 100 == 0:
-            print('epoch:', epoch, 'iteration:', iteration, 'loss:', float(loss.array))
+            print('epoch:', epoch, 'iteration:',
+                  iteration, 'loss:', float(loss.array))
         iteration += 1
 
     # Plot results
