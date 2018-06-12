@@ -20,19 +20,13 @@ if __name__ == '__main__':
     parser.add_argument('--epoch', '-e', type=int, default=10000)
     args = parser.parse_args()
 
-    y_data = np.random.uniform(-10.5, 10.5, (args.n_samples, args.input_dim))
+    y_data = np.float32(np.random.uniform(-10.5, 10.5, (args.n_samples, args.input_dim)))
     noise = np.random.normal(size=(args.n_samples, args.input_dim))
-    x_data = np.sin(0.75 * y_data) * 7.0 + y_data * 0.5 + noise * 1.0
+    x_data = np.float32(np.sin(0.75 * y_data) * 7.0 + y_data * 0.5 + noise * 1.0)
 
+    # Plot the target data
     plt.scatter(x_data, y_data, c='r', alpha=0.3)
     plt.savefig('images/target.png')
-
-    print('x_data:', x_data.shape)
-    print('y_data:', y_data.shape)
-
-    # Type conversion
-    x_data = x_data.astype(np.float32)
-    y_data = y_data.astype(np.float32)
 
     # Instantiate a model
     model = mdn.MDN(args.input_dim, args.hidden_units, args.gaussian_mixtures)

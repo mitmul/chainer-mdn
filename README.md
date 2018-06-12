@@ -7,9 +7,9 @@ This repository is intended to be a draft for a repository in [chainer/models](h
 
 ## Requirements
 
-- Chainer v4.1.0 (not tested, but may work with >=v2.0.0)
-- NumPy v1.10.0
-- Matplotlib v2.1.2
+- [Chainer](https://chainer.org) v4.1.0
+- [NumPy](http://www.numpy.org/) v1.14.0
+- [Matplotlib](https://matplotlib.org/) v2.1.2
 
 ## Train
 
